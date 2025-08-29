@@ -16,26 +16,32 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CanSearch extends Application {
-
-
-
 
 
     //File ordner = new File("C:\\Users\\prakt\\Documents\\Dosen_Fotos_small");
     FlowPane layout = new FlowPane(10, 10);
     ScrollPane scrollPane = new ScrollPane(layout);
 
-    Label outputLabel = new Label();
-    //ArrayList<String> ergebnisse = new ArrayList();
+    List<Can> cans = new ArrayList<>();
 
+    Label outputLabel = new Label();
 
 
     Button button;
     String sucheingabe;
+    Button name;
+    Button form;
+    Button geschmack;
+    Button farbe;
+    Button land;
+    Button kontinent;
 
     public static void main(String[] args) {
         launch(args);
@@ -44,54 +50,68 @@ public class CanSearch extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Label ueberschrift = new Label("u Can search");
-        ueberschrift.setFont(Font.font("Roboto Serif", FontWeight.BOLD, 30));
+        Label ueberschrift = new Label("u Can search\n\n");
+        ueberschrift.setFont(Font.font("Roboto Serif", FontWeight.BOLD, 45));
 
         Label textsuche = new Label("Textsuche: ");
-        textsuche.setFont(Font.font("Roboto Serif", 20));
+        textsuche.setFont(Font.font("Roboto Serif", 30));
+        Label kategorienueberschrift = new Label("Kategorien: ");
+        kategorienueberschrift.setFont(Font.font("Roboto Serif", 20));
 
         //Label kategorien = new Label("Kategorien:");
         //kategorien.setFont(Font.font("Roboto Serif", 20));
 
 
+        name = new Button();
+        name.setText("Name");
+        form = new Button();
+        form.setText("Form");
+        geschmack = new Button();
+        geschmack.setText("Geschmack");
+        farbe = new Button();
+        farbe.setText("Farbe");
+        land = new Button();
+        land.setText("Land");
+        kontinent = new Button();
+        kontinent.setText("Kontinent");
 
 
+        primaryStage.setTitle("uCanSearch-Databank");
+        TextField textField = new TextField();
+        textField.setPromptText("Nach welchem Begriff soll gesucht werden");
+        textField.setStyle("-fx-font-size: 20 px;");
+        textField.setPrefHeight(40);
+        textField.setPrefWidth(500);
+        button = new Button();
+        button.setText("Suchen");
+        button.setStyle("-fx-font-size: 20px;");
+        button.setPrefWidth(130);
+        button.setPrefHeight(40);
+
+        loadCans();
 
 
-
-
-
-
-            primaryStage.setTitle("uCanSearch-Databank");
-            TextField textField = new TextField();
-            textField.setPromptText("Nach welchem Begriff soll gesucht werden");
-            button = new Button();
-            button.setText("Suchen");
-        URL resource = getClass().getResource("/images");
-        File ordner = new File(Objects.requireNonNull(resource).toURI());
 
         button.setOnAction(e -> {
-                layout.getChildren().clear();
+            layout.getChildren().clear();
 
-                sucheingabe = textField.getText();
+            sucheingabe = textField.getText();
 
-                if (ordner.exists() && ordner.isDirectory()) {
-                    File[] dateien = ordner.listFiles();
-                    if (dateien != null) {
-                        for (File datei : dateien) {
-                            if ((datei.getName().toLowerCase()).contains(sucheingabe.toLowerCase())) {
-                                Image image = new Image(datei.toURI().toString());
-                                ImageView imageView = new ImageView(image);
-                                imageView.setPreserveRatio(true);
-                                imageView.setFitWidth(200);
-                                layout.getChildren().add(imageView);
+            for (Can can : cans) {
+                if ((can.name().toLowerCase()).contains(sucheingabe.toLowerCase())) {
+                    Image image = new Image(can.path());
+                    ImageView imageView = new ImageView(image);
+                    imageView.setPreserveRatio(true);
+                    imageView.setFitWidth(200);
+                    layout.getChildren().add(imageView);
 
-                            }
-                        }
-                        //outputLabel.setText(ergebnisse.toString().replace(' ', '\n').replace("[", "").replace("]", ""));
-                    }
                 }
-            });
+            }
+
+                    //outputLabel.setText(ergebnisse.toString().replace(' ', '\n').replace("[", "").replace("]", ""));
+
+
+        });
         //layout.prefWidthProperty().bind(Bindings.add(-5, scrollPane.widthProperty()));
         //layout.prefHeightProperty().bind(Bindings.add(-5, scrollPane.heightProperty()));
         scrollPane.setFitToWidth(true);    // Inhalt füllt Breite
@@ -103,56 +123,45 @@ public class CanSearch extends Application {
 
         VBox root = new VBox(10, textField, layout);
 
-            scrollPane.setStyle("-fx-padding: 20; -fx-alignment: center;");
-            layout.getChildren().add( outputLabel);
-            root.getChildren().addAll(scrollPane);
+        scrollPane.setStyle("-fx-padding: 20; -fx-alignment: center;");
+        layout.getChildren().add(outputLabel);
+        root.getChildren().addAll(scrollPane);
+        HBox texteingabe = new HBox(20);
+        texteingabe.getChildren().addAll(textsuche, textField, button);
+        HBox kategorien = new HBox(10);
+        kategorien.getChildren().addAll(name, form, geschmack, farbe, land, kontinent);
         VBox inhalt = new VBox(10);
         inhalt.setPadding(new Insets(20));
         inhalt.setAlignment(Pos.TOP_LEFT);
 
         inhalt.getChildren().addAll(
                 ueberschrift,
-                textsuche, textField,
-                button,
-                //kategorien,
+                texteingabe,
+                kategorienueberschrift,
+                kategorien,
                 scrollPane
         );
 
-            Scene scene = new Scene(inhalt, 400, 400);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
-
-
+        Scene scene = new Scene(inhalt, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-
-
-/*
-public class Main {
-
-    public static void main(String[] args) {
-        File ordner = new File("C:\\Users\\prakt\\Documents\\Dosen_Fotos"); // z. B. "C:/Users/DeinName/Desktop"
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Nach was soll gesucht werden?");
-        String sucheingabe = scan.next();
-
-        if (ordner.exists() && ordner.isDirectory()) {
-            File[] dateien = ordner.listFiles();
-
-            if (dateien != null) {
-                for (File datei : dateien) {
-                    if (datei.isFile() && datei.getName().contains(sucheingabe)) {
-                        System.out.println(datei.getName());
-                    }
+    private void loadCans() {
+        URL resource = getClass().getResource("/images");
+        try {
+            File ordner = new File(Objects.requireNonNull(resource).toURI());
+            if (ordner.exists() && ordner.isDirectory()) {
+                File[] dateien = ordner.listFiles();
+                for (File file : Objects.requireNonNull(dateien)) {
+                    cans.add(new Can(file.getName(), file.toURI().toString()));
                 }
-            } else {
-                System.out.println("Ordner ist leer");
+
             }
-        } else {
-            System.out.println("Pfad existiert nicht");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
-}
-*/
 
+
+}
