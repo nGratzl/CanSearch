@@ -1,4 +1,4 @@
-module your.module.name {
+module cansearch.module {
     requires javafx.controls;
     requires javafx.fxml;
 
