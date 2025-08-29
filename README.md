@@ -24,10 +24,6 @@ Gib einen Begriff ein – und alle Bilder mit passenden Dateinamen werden als Er
 ## 🛠️ Projektstruktur
 
 - `src/main/java/.../CanSearch.java` – Hauptklasse mit JavaFX-GUI
-- Ordner für Bilder: Stelle sicher, dass ein lokaler Ordner mit Bildern vorhanden ist.  
-  Beispielpfad im Code:  
-  `C:\\Users\\prakt\\Documents\\Dosen_Fotos_small`  
-  (Kann im Code angepasst werden)
 
 ---
 
@@ -38,3 +34,4 @@ Gib einen Begriff ein – und alle Bilder mit passenden Dateinamen werden als Er
 ```bash
 git clone https://github.com/deinBenutzername/CanSearch.git
 cd CanSearch
+mvn javafx:run
